@@ -1,0 +1,33 @@
+## Base img CentOS7.7
+sudo systemctl start firewalld
+sudo systemctl enable firewalld
+sudo firewall-cmd --add-port=1935/tcp --zone=public --permanent
+sudo firewall-cmd --add-port=80/tcp --zone=public --permanent
+sudo firewall-cmd --reload
+
+# Docker Settings
+sudo yum update -y
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install -y docker-ce docker-ce-cli containerd.io
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Speedtest
+sudo docker pull adolfintel/speedtest
+sudo docker run -e MODE=standalone --restart=always -p 80:80 -itd adolfintel/speedtest
+
+
+# SRS Settings
+sudo yum install -y wget gcc pcre-devel openssl openssl-devel git make unzip tar
+git clone https://gitee.com/winlinvip/srs.oschina.git srs
+cd srs/trunk && git remote set-url origin https://github.com/ossrs/srs.git && git pull
+./configure && make
+# ここでconfigファイルを置く
+./objs/srs -c conf/huub.realtime.conf
+
+## Login & Run srs
+cd srs/trunk
+./objs/srs -c conf/huub.realtime.conf
+or
+./objs/srs -c conf/huub.forward.conf

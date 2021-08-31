@@ -4,6 +4,7 @@ sudo systemctl enable firewalld
 sudo firewall-cmd --add-port=1935/tcp --zone=public --permanent
 sudo firewall-cmd --add-port=80/tcp --zone=public --permanent
 sudo firewall-cmd --reload
+sudo firewall-cmd --list-all
 
 # Docker Settings
 sudo yum update -y
